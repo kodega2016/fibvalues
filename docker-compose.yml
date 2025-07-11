@@ -1,0 +1,51 @@
+services:
+  redis:
+    image: redis:alpine
+  postgres:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=kodega
+      - POSTGRES_PASSWORD=supersecret
+      - POSTGRES_DB=fibvalues
+  worker:
+    build:
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  api:
+    build:
+      context: ./api
+    volumes:
+      - /app/node_modules
+      - ./api:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - POSTGRES_USER=kodega
+      - POSTGRES_PASSWORD=supersecret
+      - POSTGRES_DATABASE=fibvalues
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - redis
+      - postgres
+  client:
+    build:
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    depends_on:
+      - api
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - 8080:80
+    depends_on:
+      - api
+      - client
