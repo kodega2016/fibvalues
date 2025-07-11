@@ -22,6 +22,13 @@ resource "aws_elastic_beanstalk_environment" "this" {
 
 
   setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SecurityGroups"
+    value     = aws_security_group.fibvalues_sg.id
+  }
+
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
     value     = join(",", data.aws_subnets.default.ids)
