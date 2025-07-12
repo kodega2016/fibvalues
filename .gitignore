@@ -3,3 +3,4 @@
 .terraformrc
 *.tfstate
 envs
+terraform/terraform.tfvars
