@@ -12,3 +12,8 @@ jobs:
 
       - name: login to docker
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: run unit test
+        run: |
+          docker image build ./client -f ./client/Dockerfile.dev -t kodega2016/react-app-test
+          docker container run -e CI=true kodega2016/react-app-test npm run test
