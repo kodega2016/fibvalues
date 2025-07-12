@@ -37,6 +37,9 @@ const pgClient = new Pool({
   database: PG_DATABASE,
   password: PG_PASSWORD,
   port: PG_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // connect the pg client
