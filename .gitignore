@@ -2,4 +2,4 @@
 .terraform/
 .terraformrc
 *.tfstate
-envs/
+envs

@@ -1,39 +1,26 @@
 services:
   worker:
-    build:
-      context: ./worker
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
+    image: kodega2016/fib-worker
+    mem_limit: 128m
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    env_file:
-      - ./envs/worker.env
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
   api:
-    build:
-      context: ./api
-    volumes:
-      - /app/node_modules
-      - ./api:/app
-    env_file:
-      - ./envs/api.env
-    depends_on:
-      - redis
-      - postgres
+    image: kodega2016/fib-api
+    mem_limit: 128m
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_PORT=$POSTGRES_PORT
+      - POSTGRES_DATABASE=$POSTGRES_DATABASE
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
   client:
-    build:
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-    depends_on:
-      - api
+    mem_limit: 128m
+    image: kodega2016/fib-client
   nginx:
-    build:
-      context: ./nginx
+    image: fib-nginx
+    mem_limit: 128m
     ports:
-      - 8080:80
-    depends_on:
-      - api
-      - client
+      - 80:80
