@@ -17,3 +17,15 @@ jobs:
         run: |
           docker image build ./client -f ./client/Dockerfile.dev -t kodega2016/react-app-test
           docker container run -e CI=true kodega2016/react-app-test npm run test
+
+      - name: Build and push docker images
+        run: |
+          docker image build ./api -t kodega2016/fib-api
+          docker image build ./worker -t kodega2016/fib-worker
+          docker image build ./nginx -t kodega2016/fib-nginx
+          docker image build ./client -t kodega2016/fib-client
+
+          docker image push kodega2016/fib-api
+          docker image push kodega2016/fib-worker
+          docker image push kodega2016/fib-nginx
+          docker image push kodega2016/fib-client
